@@ -1,24 +1,30 @@
 import azure.functions as func
 import logging
+import os
+
+from .openai_service import generate_openai_response
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    name = req.params.get('name')
-    if not name:
+    openai_api_key = os.environ.get("OpenAI_ApiKey", None)
+
+    user_input = req.params.get('query')
+
+    if not user_input:
         try:
             req_body = req.get_json()
+            user_input = req_body.get('query')
         except ValueError:
             pass
-        else:
-            name = req_body.get('name')
 
-    if name:
-        return func.HttpResponse(f"Hello, 123 {name}. This HTTP triggered function executed successfully.")
+    if user_input:
+        response_text = generate_openai_response(user_input, openai_api_key)
+        if response_text:
+            return func.HttpResponse(response_text, status_code=200)
+        else:
+            return func.HttpResponse("Failed to generate response from OpenAI.", status_code=500)
     else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
+        return func.HttpResponse("Please provide a query.", status_code=400)

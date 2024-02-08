@@ -1,8 +1,4 @@
 from openai import OpenAI
-import os
-
-
-openai_api_key = os.environ.get("OpenAI_ApiKey")
 
 
 def generate_openai_response(prompt_text, openai_api_key):
@@ -21,6 +17,3 @@ def generate_openai_response(prompt_text, openai_api_key):
         print(f"Error calling OpenAI API: {e}")
         return None
 
-
-input = "Hello what can you help me"
-print(generate_openai_response(input, openai_api_key))
