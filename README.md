@@ -62,9 +62,11 @@ We are developing a chatbot that integrates with Azure Function Apps for serverl
 3. Set up environment variables for Azure and OpenAI API keys.
    - Create a .env file in the root directory of your project.
    - Add your Azure Cognitive Services and OpenAI API keys as follows:
-     ```AZURE_TRANSLATOR_TEXT_KEY=<your-translator-text-api-key>```
-     ```AZURE_SERVICE_REGION=<your-service-region>```
-     ```OPENAI_API_KEY=<your-openai-api-key>```
+     ```
+     AZURE_TRANSLATOR_TEXT_KEY=<your-translator-text-api-key>
+     AZURE_SERVICE_REGION=<your-service-region>
+     OPENAI_API_KEY=<your-openai-api-key>
+     ```
 
 4. Start the Azure Function App locally for testing.
    - Follow the Azure Functions extension in Visual Studio Code to run your app.
