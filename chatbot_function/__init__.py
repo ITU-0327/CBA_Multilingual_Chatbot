@@ -1,15 +1,15 @@
 import azure.functions as func
 import logging
-import os
 
 from .openai_service import generate_openai_response
+from .utils import get_secret
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    openai_api_key = os.environ.get("OpenAI_ApiKey", None)
+    openai_api_key = get_secret('openai-api-key')
 
     user_input = req.params.get('query')
 

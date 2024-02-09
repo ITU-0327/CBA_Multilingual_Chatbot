@@ -16,4 +16,3 @@ def generate_openai_response(prompt_text, openai_api_key):
     except Exception as e:
         print(f"Error calling OpenAI API: {e}")
         return None
-
