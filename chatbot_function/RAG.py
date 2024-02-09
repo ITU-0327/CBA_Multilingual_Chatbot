@@ -3,11 +3,11 @@ from azure.search.documents import SearchClient
 import os
 
 from .openai_service import generate_openai_response
-from .utils import get_sources_content
+from .utils import get_sources_content, get_secret
 
 
 service_name = os.environ["SERVICE_NAME"]
-admin_key = os.environ["ADMIN_KEY"]
+admin_key = get_secret('admin-key')
 index_name = os.environ["INDEX_NAME"]
 
 query_prompt_template = """Below is a history of the conversation so far, and a new question asked by the user that needs to be answered by searching in a knowledge.
