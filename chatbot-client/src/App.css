@@ -79,3 +79,24 @@
 .chat-footer button:hover {
   background: rgb(199, 159, 2);
 }
+
+.message-content {
+  word-wrap: break-word;
+  margin-bottom: 5px; /* Add space between message content and sources */
+}
+
+.message-sources {
+  font-size: 0.85rem; /* Smaller font size for sources */
+  color: #555; /* A darker grey for readability */
+  margin-top: 5px; /* Space above sources, if they are at the top of the next message */
+}
+
+.message-sources a {
+  color: #0066cc; /* Links color */
+  text-decoration: none; /* No underline */
+  word-break: break-all; /* Ensure long URLs don't overflow */
+}
+
+.message-sources a:hover {
+  text-decoration: underline; /* Underline on hover for better user interaction */
+}
