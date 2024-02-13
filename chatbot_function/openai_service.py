@@ -1,13 +1,14 @@
 from openai import OpenAI
 
 
-def generate_openai_response(prompt_text: str, openai_api_key: str, system_message: str) -> str:
+def generate_openai_response(prompt_text: str, openai_api_key: str, system_message: str, model: str = 'gpt-3.5-turbo') -> str:
     """
     Args:
         prompt_text (str): The user's input text to which the model should respond.
         openai_api_key (str): The API key for authenticating requests to OpenAI.
-        system_message (str): A system-level message that provides context for the conversation. 
+        system_message (str): A system-level message that provides context for the conversation.
                               This is used to prime the model for generating responses in a specific context.
+        model (str): The name of the model to use for generating responses.
 
     Returns:
         str or None: The generated response from the model, or None if an error occurs during the API call.
@@ -20,14 +21,14 @@ def generate_openai_response(prompt_text: str, openai_api_key: str, system_messa
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4-turbo-preview",  # Specify the model to use.
+            model=model,
             messages=[
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": prompt_text},
             ],
             temperature=0.7,
             max_tokens=256,
-            # top_p=1,  # Uncomment this to testout different parameter
+            # top_p=1,  # Uncomment this to test different parameters
             # frequency_penalty=0,
             # presence_penalty=0
         )
