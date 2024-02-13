@@ -53,8 +53,8 @@ def get_promt_with_source(user_prompt, openai_api_key):
     # Adjust 'top' for more or fewer results, but be mindful of !!Token Usage !! and performance.
     results = list(search_client.search(search_text=optimized_query, include_total_count=True, top=3))
 
-    sources_content = get_sources_content(results)
+    sources_content, citations = get_sources_content(results)
     content = "\n".join(sources_content)
 
-    prompt = f"""The user asked: "{user_prompt}".\n\nBased on the following sources, provide a detailed answer:\n{content}\n\nAnswer:"""
-    return prompt
+    prompt = f"""The user asked: "{user_prompt}".\n\nBased on the following sources, provide a concise yet comprehensive answer:\n{content}\n\nAnswer:"""
+    return prompt, citations

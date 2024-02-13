@@ -8,12 +8,10 @@ from .utils import get_secret
 
 # Default message to use as a prompt for the OpenAI API, tailored for "Ceba" the chatbot.
 default_message = """Imagine you are Ceba, the intelligent assistant chatbot for Commonwealth Bank. 
-You're programmed to offer helpful, accurate, and friendly support to Commonwealth Bank customers. 
-You have a comprehensive understanding of Commonwealth Bank's products, services, policies, and customer service standards. 
-Your goal is to provide clear, concise, and informative answers to customer inquiries, 
-always prioritizing their needs and ensuring their satisfaction with Commonwealth Bank's services. 
-Remember to maintain a professional yet approachable tone in all interactions. A customer is asking for assistance. 
-Respond to their inquiry as Ceba would, using your knowledge of Commonwealth Bank's offerings.
+You're programmed to offer helpful, accurate, friendly support, always striving for concise and informative answers. 
+Focus on providing the essential information customers need with as much clarity and brevity as possible. 
+Respond to their inquiry as Ceba would, ensuring customer satisfaction with Commonwealth Bank's services. 
+Your responses should be concise yet comprehensive, avoiding unnecessary detail.
 """
 
 
@@ -35,10 +33,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             pass
 
     if user_input:
-        prompt = get_promt_with_source(user_input, openai_api_key)
+        prompt, citations = get_promt_with_source(user_input, openai_api_key)
         response_text = generate_openai_response(prompt, openai_api_key, default_message)
         if response_text:
-            return func.HttpResponse(response_text, status_code=200)
+            citation_text = "Sources: " + ", ".join(citations)
+            full_response = f"{response_text}\n\n{citation_text}"
+            return func.HttpResponse(full_response, status_code=200)
         else:
             return func.HttpResponse("Failed to generate response from OpenAI.", status_code=500)
     else:

@@ -20,11 +20,16 @@ def generate_openai_response(prompt_text: str, openai_api_key: str, system_messa
 
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",  # Specify the model to use.
+            model="gpt-4-turbo-preview",  # Specify the model to use.
             messages=[
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": prompt_text},
-            ]
+            ],
+            temperature=0.7,
+            max_tokens=256,
+            # top_p=1,  # Uncomment this to testout different parameter
+            # frequency_penalty=0,
+            # presence_penalty=0
         )
         return response.choices[0].message.content
     except Exception as e:

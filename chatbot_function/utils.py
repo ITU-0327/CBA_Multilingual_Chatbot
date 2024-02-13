@@ -48,7 +48,7 @@ def get_sources_content(docs: List[dict]) -> List[str]:
 
     formatted_docs = []
     for doc in docs:
-        citation = doc.get('url', '')
+        url = doc.get('url', '')
         
         content_parts = [doc.get('title', ''), nonewlines(doc.get('content', ''))]
         
@@ -57,11 +57,13 @@ def get_sources_content(docs: List[dict]) -> List[str]:
         # Concatenate all parts, separated by periods.
         content = " . ".join(content_parts)
         
-        formatted_content = f"{citation}: {content}"
+        formatted_content = f"{url}: {content}"
         
         formatted_docs.append(formatted_content)
+
+    citations = [doc.get('url', '') for doc in docs]
     
-    return formatted_docs
+    return formatted_docs, citations
 
 
 def nonewlines(text: str) -> str:
