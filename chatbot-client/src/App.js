@@ -48,9 +48,10 @@ function App() {
   };
 
   const renderMessageContent = (message) => {
-    const rawMarkup = marked.parse(message.text);
-    const formattedText = formatBoldText(rawMarkup);
-    const sanitizedMarkup = DOMPurify.sanitize(formattedText);
+    const withBoldQuotes = message.text.replace(/"([^"]*)"/g, '**"$1"**');
+
+    const rawMarkup = marked.parse(withBoldQuotes);
+    const sanitizedMarkup = DOMPurify.sanitize(rawMarkup);
 
     const senderName = message.sender === 'user' ? 'You' : 'Ceba';
   
@@ -80,14 +81,6 @@ function App() {
     );
   };
 
-  function formatBoldText(text) {
-    // First replace ‘text’ with <strong>text</strong>
-    let formattedText = text.replace(/‘(.*?)’/g, "<strong>‘$1’</strong>");
-    // Then replace "text" with <strong>text</strong>
-    formattedText = formattedText.replace(/"(.*?)"/g, "<strong>\"$1\"</strong>");
-    return formattedText;
-  }
-  
 
   return (
     <div className="chat-container">
