@@ -1,5 +1,6 @@
 import azure.functions as func
 import logging
+import json
 
 from .openai_service import generate_openai_response
 from .RAG import get_promt_with_source
@@ -33,12 +34,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             pass
 
     if user_input:
-        prompt, citations = get_promt_with_source(user_input, openai_api_key)
+        prompt, sources = get_promt_with_source(user_input, openai_api_key)
         response_text = generate_openai_response(prompt, openai_api_key, default_message)
         if response_text:
-            citation_text = "Sources: " + ", ".join(citations)
-            full_response = f"{response_text}\n\n{citation_text}"
-            return func.HttpResponse(full_response, status_code=200)
+            response_data = {
+                "text": response_text,
+                "sources": sources
+            }
+            return func.HttpResponse(json.dumps(response_data), status_code=200, mimetype="application/json")
         else:
             return func.HttpResponse("Failed to generate response from OpenAI.", status_code=500)
     else:

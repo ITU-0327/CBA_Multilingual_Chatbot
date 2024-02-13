@@ -61,7 +61,7 @@ def get_sources_content(docs: List[dict]) -> List[str]:
         
         formatted_docs.append(formatted_content)
 
-    citations = [doc.get('url', '') for doc in docs]
+    citations = [doc['url'] for doc in docs]
     
     return formatted_docs, citations
 
