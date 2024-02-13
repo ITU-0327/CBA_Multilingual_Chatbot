@@ -51,11 +51,17 @@ function App() {
     const rawMarkup = marked.parse(message.text);
     const formattedText = formatBoldText(rawMarkup);
     const sanitizedMarkup = DOMPurify.sanitize(formattedText);
+
+    const senderName = message.sender === 'user' ? 'You' : 'Ceba';
   
     return (
       <div>
+        {/* Display sender's name */}
+        <div className="message-sender">{senderName}</div>
+
         {/* Render the message as HTML */}
         <div className="message-content" dangerouslySetInnerHTML={{ __html: sanitizedMarkup }}></div>
+
         {/* Render sources if they exist */}
         {message.sources && message.sources.length > 0 && (
           <div className="message-sources">
@@ -75,9 +81,13 @@ function App() {
   };
 
   function formatBoldText(text) {
-    // Replace ‘text’ with <strong>text</strong>
-    return text.replace(/‘(.*?)’/g, "<strong>‘$1’</strong>");
+    // First replace ‘text’ with <strong>text</strong>
+    let formattedText = text.replace(/‘(.*?)’/g, "<strong>‘$1’</strong>");
+    // Then replace "text" with <strong>text</strong>
+    formattedText = formattedText.replace(/"(.*?)"/g, "<strong>\"$1\"</strong>");
+    return formattedText;
   }
+  
 
   return (
     <div className="chat-container">

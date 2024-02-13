@@ -103,8 +103,12 @@
   text-decoration: underline;
 }
 
-
 .message-sources .source-prefix {
   font-weight: bold;
   margin-right: 5px;
+}
+
+.message-sender {
+  font-weight: bold;
+  margin-bottom: 4px;
 }
