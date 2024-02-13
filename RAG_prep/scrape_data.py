@@ -11,48 +11,44 @@ import hashlib
 
 
 def fetch_and_parse(url):
+    """Fetches HTML content from a given URL using Selenium with headless Edge browser, and returns the inner HTML of a specific element."""
     options = Options()
-    options.add_argument("--headless")
+    options.add_argument("--headless")  # Enable headless mode for background operation.
     options.add_argument("--disable-gpu")
 
     driver = webdriver.Edge(options=options)
-
     driver.get(url)
 
     try:
+        # Wait for the specific element to be loaded on the page.
         element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "support-fragment"))
         )
-        content = element.get_attribute('innerHTML')
+        content = element.get_attribute('innerHTML')  # Extract the inner HTML of the element.
     except Exception as e:
         print(f"An error occurred: {e}")
+        content = None  # Ensure content is None if an error occurs.
     finally:
         driver.quit()
     return content
 
 
 def extract_information(html_content, url):
-    content = BeautifulSoup(html_content, 'html.parser')
+    """Parses HTML content to extract and structure information such as title, content, and metadata."""
+    soup = BeautifulSoup(html_content, 'html.parser')
+    title = soup.title.string if soup.title else "No title"
     
-    title = content.title.string if content.title else "No title"
-    page_content = ' '.join([p.text for p in content.find_all('p')])
-    sections = []
-    for header in content.find_all(['h1', 'h2', 'h3']):
-        section_text = []
-        for sibling in header.find_next_siblings():
-            if sibling.name and sibling.name.lower() in ['h1', 'h2', 'h3']:
-                break
-            if sibling.name:
-                section_text.append(sibling.get_text(separator=" ", strip=True))
-        sections.append({
-            "header": header.get_text(strip=True),
-            "text": " ".join(section_text)
-        })
+    # Extract the main content and section headers with their text.
+    page_content = ' '.join([p.text for p in soup.find_all('p')])
+    sections = [{
+        "header": header.get_text(strip=True),
+        "text": " ".join(sibling.get_text(separator=" ", strip=True) for sibling in header.find_next_siblings() if sibling.name and sibling.name.lower() in ['p', 'ul', 'ol'])
+    } for header in soup.find_all(['h1', 'h2', 'h3'])]
 
-    keywords_meta = content.find("meta", {"name":"keyword"})
+    # Extract keywords and description from meta tags.
+    keywords_meta = soup.find("meta", {"name": "keywords"})
     keywords = keywords_meta["content"].split(",") if keywords_meta else []
-
-    scraped_date = datetime.now().isoformat()
+    description = soup.find("meta", {"name": "description"})["content"] if soup.find("meta", {"name": "description"}) else ""
 
     document = {
         "id": generate_hash_id(url),
@@ -60,9 +56,9 @@ def extract_information(html_content, url):
         "title": title,
         "content": page_content,
         "metadata": {
-            "scrapedDate": scraped_date,
+            "scrapedDate": datetime.now().isoformat(),
             "keywords": keywords,
-            "description": content.find("meta", {"name":"description"})["content"] if content.find("meta", {"name":"description"}) else ""
+            "description": description
         },
         "sections": sections
     }
@@ -70,6 +66,7 @@ def extract_information(html_content, url):
 
 
 def generate_hash_id(url):
+    """Generates a SHA-256 hash of the URL to use as a unique ID."""
     return hashlib.sha256(url.encode()).hexdigest()
 
 
@@ -101,8 +98,8 @@ urls = [
 
 
 if __name__ == '__main__':
-    output_dir = 'RAG'
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir = 'RAG_prep'
+    os.makedirs(output_dir, exist_ok=True) # Ensure the output directory exists.
 
     documents = []
 

@@ -6,6 +6,7 @@ from .RAG import get_promt_with_source
 from .utils import get_secret
 
 
+# Default message to use as a prompt for the OpenAI API, tailored for "Ceba" the chatbot.
 default_message = """Imagine you are Ceba, the intelligent assistant chatbot for Commonwealth Bank. 
 You're programmed to offer helpful, accurate, and friendly support to Commonwealth Bank customers. 
 You have a comprehensive understanding of Commonwealth Bank's products, services, policies, and customer service standards. 
@@ -23,6 +24,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     openai_api_key = get_secret('openai-api-key')
 
+    # Attempt to get user input from query parameters or request body.
     user_input = req.params.get('query')
 
     if not user_input:
