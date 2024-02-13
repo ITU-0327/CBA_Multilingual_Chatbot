@@ -32,7 +32,7 @@ def get_secret(secret_name: str) -> str:
     return retrieved_secret.value
 
 
-def get_sources_content(docs: List[dict]) -> (List[str], List[dict]):
+def get_sources_content(docs: List[dict]) -> (List[str], List[dict]): # type: ignore
     """
     Formats a list of document dictionaries into a list of strings containing the content
     and a list of dictionaries for citations containing 'title' and 'url'.

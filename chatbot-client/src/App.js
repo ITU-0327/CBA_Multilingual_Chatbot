@@ -59,9 +59,12 @@ function App() {
         {/* Render sources if they exist */}
         {message.sources && message.sources.length > 0 && (
           <div className="message-sources">
-            Sources: {message.sources.map((source, index) => (
+            Sources:
+            {message.sources.map((source, index) => (
               <span key={index}>
-                <a href={source} target="_blank" rel="noopener noreferrer">{source}</a>
+                <a href={source.url} target="_blank" rel="noopener noreferrer">
+                  {source.title || source.url}  {/* Fallback to URL if title is not available */}
+                </a>
                 {index < message.sources.length - 1 ? ', ' : ''}
               </span>
             ))}
