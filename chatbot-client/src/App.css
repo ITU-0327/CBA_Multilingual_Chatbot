@@ -41,10 +41,6 @@
   background-color: #fff;
 }
 
-.message-content {
-  word-wrap: break-word;
-}
-
 .message-timestamp {
   align-self: flex-end;
   font-size: 0.75rem;
@@ -99,4 +95,9 @@
 
 .message-sources a:hover {
   text-decoration: underline; /* Underline on hover for better user interaction */
+}
+
+.message-sources .source-prefix {
+  font-weight: bold; /* Make "Sources:" bold */
+  margin-right: 5px; /* Spacing between "Sources:" and the links */
 }

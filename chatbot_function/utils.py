@@ -32,9 +32,10 @@ def get_secret(secret_name: str) -> str:
     return retrieved_secret.value
 
 
-def get_sources_content(docs: List[dict]) -> List[str]:
+def get_sources_content(docs: List[dict]) -> (List[str], List[dict]):
     """
-    Formats a list of document dictionaries into a list of strings containing the content.
+    Formats a list of document dictionaries into a list of strings containing the content
+    and a list of dictionaries for citations containing 'title' and 'url'.
 
     Each document dictionary should have 'url', 'title', 'content', and optionally 'sections'.
     Sections should be a list of dictionaries with a 'text' field.
@@ -43,26 +44,29 @@ def get_sources_content(docs: List[dict]) -> List[str]:
         docs (List[dict]): A list of document dictionaries to format.
 
     Returns:
-        List[str]: A list of formatted strings containing the content from the input documents.
+        Tuple[List[str], List[dict]]: A tuple containing a list of formatted strings 
+        containing the content from the input documents, and a list of dictionaries 
+        for citations.
     """
 
     formatted_docs = []
+    citations = []
     for doc in docs:
-        url = doc.get('url', '')
+        title = doc.get('title', 'Unknown Title')
+        url = doc.get('url', '#')
         
-        content_parts = [doc.get('title', ''), nonewlines(doc.get('content', ''))]
-        
+        content_parts = [nonewlines(doc.get('content', ''))]
         content_parts += [section['text'] for section in doc.get('sections', []) if section['text']]
         
         # Concatenate all parts, separated by periods.
         content = " . ".join(content_parts)
         
-        formatted_content = f"{url}: {content}"
+        formatted_content = f"{content} (Source: {title})"
         
         formatted_docs.append(formatted_content)
+        
+        citations.append({'url': url, 'title': title})
 
-    citations = [doc['url'] for doc in docs]
-    
     return formatted_docs, citations
 
 

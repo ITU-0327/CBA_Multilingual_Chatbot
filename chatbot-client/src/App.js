@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import './App.css';
 
 
@@ -46,9 +48,14 @@ function App() {
   };
 
   const renderMessageContent = (message) => {
+    const rawMarkup = marked.parse(message.text);
+  
+    const sanitizedMarkup = DOMPurify.sanitize(rawMarkup);
+  
     return (
       <div>
-        <div className="message-content">{message.text}</div>
+        {/* Render the message as HTML */}
+        <div className="message-content" dangerouslySetInnerHTML={{ __html: sanitizedMarkup }}></div>
         {/* Render sources if they exist */}
         {message.sources && message.sources.length > 0 && (
           <div className="message-sources">
