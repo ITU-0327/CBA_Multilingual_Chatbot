@@ -49,8 +49,8 @@ function App() {
 
   const renderMessageContent = (message) => {
     const rawMarkup = marked.parse(message.text);
-  
-    const sanitizedMarkup = DOMPurify.sanitize(rawMarkup);
+    const formattedText = formatBoldText(rawMarkup);
+    const sanitizedMarkup = DOMPurify.sanitize(formattedText);
   
     return (
       <div>
@@ -59,13 +59,13 @@ function App() {
         {/* Render sources if they exist */}
         {message.sources && message.sources.length > 0 && (
           <div className="message-sources">
-            Sources:
+            Sources:&nbsp;
             {message.sources.map((source, index) => (
               <span key={index}>
                 <a href={source.url} target="_blank" rel="noopener noreferrer">
                   {source.title || source.url}  {/* Fallback to URL if title is not available */}
                 </a>
-                {index < message.sources.length - 1 ? ', ' : ''}
+                {index < message.sources.length - 1 ? ' ' : ''}
               </span>
             ))}
           </div>
@@ -73,6 +73,11 @@ function App() {
       </div>
     );
   };
+
+  function formatBoldText(text) {
+    // Replace ‘text’ with <strong>text</strong>
+    return text.replace(/‘(.*?)’/g, "<strong>‘$1’</strong>");
+  }
 
   return (
     <div className="chat-container">
