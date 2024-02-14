@@ -9,12 +9,46 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef(null);
+  const [isBotThinking, setIsBotThinking] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }
 
   useEffect(scrollToBottom, [messages]);
+
+  const sendBotMessage = (text, delay = 0, sources = []) => {
+    setTimeout(() => {
+      const botMessage = { 
+        id: Date.now(), 
+        text, 
+        sources,
+        sender: 'bot', 
+        timestamp: new Date().toLocaleTimeString() 
+      };
+      setMessages(messages => [...messages, botMessage]);
+    }, delay);
+  };
+
+  // useEffect to send initial bot messages when the page loads
+  useEffect(() => {
+    const timeouts = [];
+    const delayMessage1 = setTimeout(() => {
+      sendBotMessage("I'm your virtual assistant. I can get you instant answers or connect you to the right specialist.", 0);
+    }, 500);
+    timeouts.push(delayMessage1);
+  
+    const delayMessage2 = setTimeout(() => {
+      sendBotMessage("How can I help?", 0);
+    }, 1500);
+    timeouts.push(delayMessage2);
+  
+    // Cleanup function
+    return () => {
+      timeouts.forEach(clearTimeout);
+    };
+  }, []);
+
 
   const azureFunctionUrl = 'https://cba-chatbot-prototype.azurewebsites.net/api/chatbot_function';
 
@@ -32,6 +66,8 @@ function App() {
     
     setInputValue('');
 
+    setIsBotThinking(true); // Start loading animation
+
     try {
       const response = await axios.post(azureFunctionUrl, { query: inputValue });
       const botMessage = { 
@@ -44,6 +80,8 @@ function App() {
       setMessages(messages => [...messages, botMessage]);
     } catch (error) {
       console.error('Error sending message:', error);
+    } finally {
+      setIsBotThinking(false); // Stop loading animation
     }
   };
 
@@ -94,8 +132,11 @@ function App() {
             <div className="message-timestamp">{message.timestamp}</div>
           </div>
         ))}
+        {isBotThinking && <div className="message bot">Be patient Ceba is thinking...</div>}
+        {isBotThinking && <div className="spinner"></div>}
         <div ref={messagesEndRef} />
       </div>
+
       <div className="chat-footer">
         <input
           type="text"
