@@ -40,7 +40,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if user_input:
         if detect_language(user_input) != 'en':
             english_input = translate_text(user_input)
-            return func.HttpResponse(f"Detect Language: {detect_language(user_input)}", status_code=200)
+            response_data = {
+                "text": f"Detect Language: {detect_language(user_input)}",
+                "sources": []
+            }
+            return func.HttpResponse(json.dumps(response_data), status_code=200, mimetype="application/json")
         else:
             english_input = user_input
         prompt, sources = get_promt_with_source(english_input, openai_api_key)
