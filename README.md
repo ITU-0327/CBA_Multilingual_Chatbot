@@ -7,7 +7,7 @@ This project aims to revolutionize chatbot accessibility for non-English speakin
 ### Challenge
 
 The initiative focuses on enhancing communication through:
-- Auto-detecting the language spoken by the user.
+- Auto-detecting the language used by the user.
 - Processing banking inquiries in multiple languages.
 - Utilizing user-friendly interfaces that consider cultural nuances to bridge the communication gap.
 
@@ -17,12 +17,18 @@ We are developing a chatbot that integrates with Azure Function Apps for serverl
 
 ## Technology Stack
 
-- **Serverless Framework**: Azure Function Apps for hosting and executing chatbot logic without managing infrastructure.
-- **Language Detection and Translation**: Azure Cognitive Services, particularly the Translator Text API for translating user queries and responses.
-- **AI Model for Response Generation**: OpenAI API, utilizing its advanced natural language processing capabilities for generating contextually relevant responses.
-- **IDE**: Visual Studio Code with extensions supporting Azure development and Python programming.
-- **Programming Language**: Python 3.11 for scripting and automation tasks.
-- **Data Retrieval**: Custom scripts for web scraping, aimed at extracting and structuring data from the Commonwealth Bank's website for retrieval-augmented generation (RAG).
+- **Azure Function Apps**: Serverless computing for chatbot logic.
+- **Azure Cognitive Services & Translator Text API**: For multilingual support.
+- **OpenAI API**: Advanced AI for context-aware responses.
+- **Cosmos DB**: NoSQL database for storing scraped data.
+- **Azure AI Search & RAG**: Enhancing data retrieval and response generation.
+- **Azure Key Vault**: Securing secrets.
+- **Selenium**: Web scraping.
+- **React**: Frontend interface.
+- **GitHub Actions**: CI/CD for deployment.
+- **Visual Studio Code**: IDE with Azure and Python extensions.
+- **Python 3.11**: Programming language.
+
 
 ## Setup and Installation
 
@@ -89,21 +95,21 @@ We are developing a chatbot that integrates with Azure Function Apps for serverl
 
 ## License
 
-[MIT License](LICENSE)
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Contributors
 
-- **Tony** - Contributed to the overall project development, focusing on integrating Azure Function Apps and ensuring seamless operation across different components of the chatbot. Provided leadership and coordination throughout the project.
+- **Tony** - Contributed to the overall project development, focusing on integrating Azure Function Apps and ensuring seamless operation across different components of the chatbot. Provided leadership and ensured smooth operation across chatbot components.
   - [GitHub](https://github.com/ITU-0327)
-  - [LinkedIn](www.linkedin.com/in/i-tung-hsieh-it)
+  - [LinkedIn](https://www.linkedin.com/in/i-tung-hsieh-it)
 
 - **Akshita** - Played a key role in integrating Azure Cognitive Services, ensuring the chatbot's language detection and response generation capabilities were optimized for multilingual support. Additionally, Akshita took on the role of project manager, overseeing project timelines, coordinating tasks among team members, and ensuring project milestones were met efficiently.
   - [GitHub]()
   - [LinkedIn]()
 
-- **Kimme** - Focused on user experience and testing, ensuring the chatbot interface was intuitive and accessible for users from diverse linguistic backgrounds. Led the efforts in gathering user feedback and refining the chatbot functionality. Collaborated with Tony in integrating OpenAI's API, contributing to the chatbot's advanced conversational abilities.
-  - [GitHub]()
-  - [LinkedIn]()
+- **Kimme** - Specialized in user experience and testing, making the chatbot interface intuitive and accessible across diverse linguistic backgrounds. Led the collection of user feedback and the refinement of chatbot functionality. Played a key role in integrating the Translator API, enriching the chatbot's multilingual support and advanced conversational abilities.
+  - [GitHub](https://github.com/shuenyng)
+  - [LinkedIn](https://www.linkedin.com/in/shuen-y%E2%80%99ng-tan-942b36198/)
 
 Each member of the team has been instrumental in all phases of the project, from planning and development to testing and refinement, demonstrating a collaborative effort throughout.
 
