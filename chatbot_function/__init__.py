@@ -45,12 +45,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     if not isEnglish(input_language):
         english_input = translate_text(user_input)
-        # response_data = {
-        #     "text": f"Detect Language: {detect_language(user_input)}",
-        #     "input_language": detect_language(user_input),
-        #     "sources": []
-        # }
-        # return func.HttpResponse(json.dumps(response_data), status_code=200, mimetype="application/json")
     else:
         english_input = user_input
     
