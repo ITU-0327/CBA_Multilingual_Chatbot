@@ -4,7 +4,7 @@ import json
 
 from .openai_service import generate_openai_response
 from .RAG import get_promt_with_source
-from .utils import get_secret
+from .utils import get_secret, isEnglish
 from .language_service import detect_language, translate_text
 
 
@@ -37,29 +37,36 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         except ValueError:
             pass
 
-    if user_input:
-        if detect_language(user_input) != 'en':
-            english_input = translate_text(user_input)
-            response_data = {
-                "text": f"Detect Language: {detect_language(user_input)}",
-                "sources": []
-            }
-            return func.HttpResponse(json.dumps(response_data), status_code=200, mimetype="application/json")
-        else:
-            english_input = user_input
-        prompt, sources = get_promt_with_source(english_input, openai_api_key)
-        response_text = generate_openai_response(prompt, openai_api_key, default_message, 'gpt-4-turbo-preview')
-
-        if detect_language(user_input) != 'en':
-            translated_response = translate_text(response_text)
-        
-        if translated_response:
-            response_data = {
-                "text": translated_response,
-                "sources": sources
-            }
-            return func.HttpResponse(json.dumps(response_data), status_code=200, mimetype="application/json")
-        else:
-            return func.HttpResponse("Failed to generate response from OpenAI.", status_code=500)
-    else:
+    if not user_input:
         return func.HttpResponse("Please provide a query.", status_code=400)
+
+    # if user_input
+    input_language = detect_language(user_input)
+
+    if not isEnglish(input_language):
+        english_input = translate_text(user_input)
+        # response_data = {
+        #     "text": f"Detect Language: {detect_language(user_input)}",
+        #     "input_language": detect_language(user_input),
+        #     "sources": []
+        # }
+        # return func.HttpResponse(json.dumps(response_data), status_code=200, mimetype="application/json")
+    else:
+        english_input = user_input
+    
+    prompt, sources = get_promt_with_source(english_input, openai_api_key)
+    response_text = generate_openai_response(prompt, openai_api_key, default_message, 'gpt-4-turbo-preview')
+
+    if not isEnglish(user_input) and input_language != 'und':
+        translated_response = translate_text(response_text, input_language)
+    else:
+        translated_response = response_text
+    
+    if translated_response:
+        response_data = {
+            "text": translated_response,
+            "sources": sources
+        }
+        return func.HttpResponse(json.dumps(response_data), status_code=200, mimetype="application/json")
+    else:
+        return func.HttpResponse("Failed to generate response from OpenAI.", status_code=500)
