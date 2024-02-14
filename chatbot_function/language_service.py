@@ -1,19 +1,18 @@
 from azure.ai.textanalytics import TextAnalyticsClient
 from azure.core.credentials import AzureKeyCredential
 from azure.ai.translation.document import DocumentTranslationClient, TranslationTarget
+from .utils import get_secret
 import os
 
 
 # Initialise Azure Cognitive Services credentials
-# key = os.environ["AZURE_LANGUAGE_SERVICE_KEY"]
-# endpoint = os.environ["AZURE_LANGUAGE_SERVICE_ENDPOINT"]
-key = "0e28e50d295144e0811dd4c36aabf286"
-endpoint = "https://cba-languageservice.cognitiveservices.azure.com/"
+endpoint = os.environ["AZURE_LANGUAGE_SERVICE_ENDPOINT"]
+language_service_key = get_secret('language_service_key')
 
 
 # Function to create a Text Analytics Client
 def authenticate_client():
-    ta_credential = AzureKeyCredential(key)
+    ta_credential = AzureKeyCredential(language_service_key)
     text_analytics_client = TextAnalyticsClient(
             endpoint=endpoint, 
             credential=ta_credential)
@@ -27,38 +26,16 @@ def detect_language(input_text):
         for document in response:
             if 'primary_language' in document:
                 language = document['primary_language']['iso6391_name']
-                print(f"Detected Language: {language}")
+                return(language)
             else:
-                print("No language detected.")
+                return("No language detected.")
     else:
-        print("No language detected.")
-
-# Test input text samples
-input_texts = [
-    "Hello, how are you?",
-    "Bonjour, comment ça va?",
-    "Hola, ¿cómo estás?",
-    "Guten Tag, wie geht es Ihnen?",
-    "こんにちは、元気ですか？",
-    "안녕하세요, 잘 지내세요?",
-    "你好吗？",
-    "مرحبا، كيف حالك؟"
-]
-
-# Call the detect_language function for each input text
-for text in input_texts:
-    detect_language(text)
-
-# Test an edge case with an empty string
-empty_text = ""
-detected_language_empty = detect_language(empty_text)
-print(f"Empty Text | Detected Language: {detected_language_empty}")
-
+        return("No language detected.")
 
 
 # Function to translate text
 def translate_text(input_text, target_language="en"):
-    document_translation_client = DocumentTranslationClient(endpoint, AzureKeyCredential(key))
+    document_translation_client = DocumentTranslationClient(endpoint, AzureKeyCredential(language_service_key))
     
     # For the sake of simplicity in this example, we'll pretend there's a function that submits
     # translation jobs and waits for the result, returning the translated text.
