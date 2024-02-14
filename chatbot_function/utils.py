@@ -81,3 +81,7 @@ def nonewlines(text: str) -> str:
         str: The modified string with newline characters replaced by spaces.
     """
     return ' '.join(text.split())
+
+
+def isEnglish(language: str) -> bool:
+    return language == 'en'
