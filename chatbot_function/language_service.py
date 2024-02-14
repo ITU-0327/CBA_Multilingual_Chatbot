@@ -7,7 +7,7 @@ import os
 
 # Initialise Azure Cognitive Services credentials
 endpoint = os.environ["AZURE_LANGUAGE_SERVICE_ENDPOINT"]
-language_service_key = get_secret('language_service_key')
+language_service_key = get_secret('language-service-key')
 
 
 # Function to create a Text Analytics Client
