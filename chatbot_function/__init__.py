@@ -37,11 +37,19 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             pass
 
     if user_input:
-        prompt, sources = get_promt_with_source(user_input, openai_api_key)
+        if detect_language(user_input) != 'en':
+            english_input = translate_text(user_input)
+        else:
+            english_input = user_input
+        prompt, sources = get_promt_with_source(english_input, openai_api_key)
         response_text = generate_openai_response(prompt, openai_api_key, default_message, 'gpt-4-turbo-preview')
-        if response_text:
+
+        if detect_language(user_input) != 'en':
+            translated_response = translate_text(response_text)
+        
+        if translated_response:
             response_data = {
-                "text": response_text,
+                "text": translated_response,
                 "sources": sources
             }
             return func.HttpResponse(json.dumps(response_data), status_code=200, mimetype="application/json")

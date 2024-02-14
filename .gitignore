@@ -135,6 +135,6 @@ __azurite_db*__.json
 .python_packages
 
 RAG_prep/all_documents.json
+.vscode/
 
 .DS_Store
-
