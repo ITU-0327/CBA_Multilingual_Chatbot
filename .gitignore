@@ -136,3 +136,5 @@ __azurite_db*__.json
 
 RAG_prep/all_documents.json
 .vscode/
+.DS_Store
+
