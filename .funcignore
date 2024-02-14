@@ -7,3 +7,4 @@ local.settings.json
 test
 .venv
 RAG_prep/
+chatbot-client/
