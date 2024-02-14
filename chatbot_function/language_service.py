@@ -37,18 +37,13 @@ def detect_language(input_text: str) -> str:
         return 'und'
 
     client = authenticate_client()
-
+    
     try:
-        response = client.detect_language(documents=[{"id": "1", "text": input_text}])
-        if response is not None and len(response.documents) > 0:
-            document = response.documents[0]
-            if document.detected_languages:
-                primary_language = document.detected_languages[0]
-                return primary_language.iso6391_name
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-    return 'und'
+        response = client.detect_language(documents=[input_text])[0]
+        return response.primary_language.iso6391_name
+    except Exception as err:
+        print(f"Encountered exception: {err}")
+        return 'und'
 
 
 # Function to translate text
