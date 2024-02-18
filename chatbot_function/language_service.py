@@ -57,8 +57,8 @@ def translate_text(input_text: str, from_lang: str = '', to_lang: str = 'en') ->
 
     Args:
         input_text (str): The text to be translated.
-        from_lang (str): The source language code (default is 'en' for English).
-        to_lang (str): The target language code (e.g., 'fr' for French).
+        from_lang (str): The source language code, automatically detact the language when it's empty (e.g., 'fr' for French).
+        to_lang (str): The target language code (default is 'en' for English).
 
     Returns:
         str: A JSON string of the translation results.
