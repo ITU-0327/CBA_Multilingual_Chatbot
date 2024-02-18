@@ -59,8 +59,8 @@ def translate_text(input_text: str, from_lang: str = 'en', to_lang: str = 'fr') 
         str: A JSON string of the translation results.
     """
 
-    key = None
-    endpoint = None
+    key = get_secret('detect-language')
+    endpoint = os.environ["AZURE_LANGUAGE_SERVICE_ENDPOINT"]
     location = "australiaeast"
 
     path = '/translate'
