@@ -47,7 +47,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     input_language = detect_language(user_input)
 
     if not isEnglish(input_language):
-        english_input = translate_text(user_input, from_lang=input_language, to_lang=ENGLISH)
+        english_input = translate_text(user_input, from_lang=input_language) # Default translate to English
     else:
         english_input = user_input
     
