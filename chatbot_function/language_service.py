@@ -6,47 +6,52 @@ import requests, uuid, json
 from .utils import get_secret
 
 
-language_service_key = get_secret('language-service-key')
-endpoint = os.environ["AZURE_LANGUAGE_SERVICE_ENDPOINT"]
-
-
-def authenticate_client():
-    ta_credential = AzureKeyCredential(language_service_key)
-    text_analytics_client = TextAnalyticsClient(
-            endpoint=endpoint, 
-            credential=ta_credential)
-    return text_analytics_client
+key = get_secret('detect-language')
+endpoint = os.environ["AZURE_TRANSLATE_ENDPOINT"]
+location = "australiaeast"
 
 
 def detect_language(input_text: str) -> str:
     """
-    Detects the primary language of the given input text using Azure's Text Analytics API.
-
-    If the input text is empty or contains only whitespace, the function returns 'und' to
-    indicate an undefined language, as making a call with empty content could be wasteful
-    or lead to unnecessary processing.
+    Detects the primary language of the given input text using Azure's Translator Text API.
 
     Args:
         input_text (str): The text for which to detect the language.
 
     Returns:
-        str: The ISO 639-1 language code of the detected primary language, or 'und' if the
-        input text is empty or cannot be processed.
+        str: The detected language code (e.g., 'de' for German).
     """
-    if not input_text.strip():
-        return 'und'
 
-    client = authenticate_client()
-    
+    path = '/detect'
+    constructed_url = endpoint + path
+
+    params = {
+        'api-version': '3.0'
+    }
+
+    headers = {
+        'Ocp-Apim-Subscription-Key': key,
+        'Ocp-Apim-Subscription-Region': location,
+        'Content-type': 'application/json',
+        'X-ClientTraceId': str(uuid.uuid4())
+    }
+
+    body = [{
+        'text': input_text
+    }]
+
     try:
-        response = client.detect_language(documents=[input_text])[0]
-        return response.primary_language.iso6391_name
+        request = requests.post(constructed_url, params=params, headers=headers, json=body)
+        response = request.json()
+
+        detected_language = response[0]["language"]
+        return detected_language
     except Exception as err:
         print(f"Encountered exception: {err}")
         return 'und'
 
 
-def translate_text(input_text: str, from_lang: str = 'en', to_lang: str = 'fr') -> str:
+def translate_text(input_text: str, from_lang: str = '', to_lang: str = 'en') -> str:
     """
     Translates text from one language to a specified target language using Azure's Translator Text API.
 
@@ -58,10 +63,6 @@ def translate_text(input_text: str, from_lang: str = 'en', to_lang: str = 'fr') 
     Returns:
         str: A JSON string of the translation results.
     """
-
-    key = get_secret('detect-language')
-    endpoint = os.environ["AZURE_LANGUAGE_SERVICE_ENDPOINT"]
-    location = "australiaeast"
 
     path = '/translate'
     constructed_url = endpoint + path
@@ -82,5 +83,10 @@ def translate_text(input_text: str, from_lang: str = 'en', to_lang: str = 'fr') 
     body = [{'text': input_text}]
 
     response = requests.post(constructed_url, params=params, headers=headers, json=body).json()
+    try:
+        translations = response[0]['translations']
+        translated_text = translations[0]['text'] if translations else ""
+    except Exception as err:
+        return f"Encountered exception: {err}"
 
-    return json.dumps(response, sort_keys=True, ensure_ascii=False, indent=4, separators=(',', ': '))
+    return translated_text

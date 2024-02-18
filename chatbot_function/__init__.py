@@ -8,6 +8,9 @@ from .utils import get_secret, isEnglish
 from .language_service import detect_language, translate_text
 
 
+ENGLISH = 'en'
+
+
 # Default message to use as a prompt for the OpenAI API, tailored for "Ceba" the chatbot.
 default_message = """Imagine you are Ceba, the intelligent assistant chatbot for Commonwealth Bank. 
 When customers ask for help, your primary goal is to provide them with clear and direct instructions using only the most relevant information. 
@@ -44,7 +47,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     input_language = detect_language(user_input)
 
     if not isEnglish(input_language):
-        english_input = translate_text(user_input)
+        english_input = translate_text(user_input, from_lang=input_language, to_lang=ENGLISH)
     else:
         english_input = user_input
     
@@ -52,7 +55,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     response_text = generate_openai_response(prompt, openai_api_key, default_message, 'gpt-4-turbo-preview')
 
     if not isEnglish(input_language) and input_language != 'und':
-        translated_response = translate_text(response_text, input_language)
+        translated_response = translate_text(response_text, from_lang=ENGLISH, to_lang=input_language)
     else:
         translated_response = response_text
     
